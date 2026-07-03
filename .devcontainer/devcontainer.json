@@ -1,0 +1,16 @@
+{
+  "name": "java-21-dev",
+  "image": "maven:3.9-eclipse-temurin-21",
+
+  "workspaceFolder": "/workspace",
+
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack"
+      ]
+    }
+  }
+}
