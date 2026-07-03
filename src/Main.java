@@ -41,7 +41,8 @@ public class Main {
             System.out.println("===== MENU =====");
             System.out.println("1 - Rodar NRU");
             System.out.println("2 - Rodar DCO");
-            System.out.println("3 - Rodar os dois e comparar");
+            System.out.println("3 - Rodar Segunda Chance");
+            System.out.println("4 - Rodar os três e comparar");
             System.out.println("0 - Sair");
             System.out.print("Escolha: ");
 
@@ -57,10 +58,16 @@ public class Main {
                     break;
 
                 case "3":
+                    rodarEExibir("SegundaChance", DCO.simular(referencias, quadrosDisponiveis));
+                    break;
+
+                case "4":
                     EstatisticasSimulacao resultadoNru = NRU.simular(referencias, quadrosDisponiveis, tempoClock);
                     EstatisticasSimulacao resultadoDco = DCO.simular(referencias, quadrosDisponiveis);
+                    EstatisticasSimulacao resultadoDco = SegundaChance.simular(referencias, quadrosDisponiveis);
                     rodarEExibir("NRU", resultadoNru);
                     rodarEExibir("DCO", resultadoDco);
+                    rodarEExibir("SegundaChance", resultadoDco);
                     break;
 
                 case "0":
