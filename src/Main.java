@@ -64,10 +64,10 @@ public class Main {
                 case "4":
                     EstatisticasSimulacao resultadoNru = NRU.simular(referencias, quadrosDisponiveis, tempoClock);
                     EstatisticasSimulacao resultadoDco = DCO.simular(referencias, quadrosDisponiveis);
-                    EstatisticasSimulacao resultadoDco = SegundaChance.simular(referencias, quadrosDisponiveis);
+                    EstatisticasSimulacao resultadoSegundaChance = SegundaChance.simular(referencias, quadrosDisponiveis);
                     rodarEExibir("NRU", resultadoNru);
                     rodarEExibir("DCO", resultadoDco);
-                    rodarEExibir("SegundaChance", resultadoDco);
+                    rodarEExibir("SegundaChance", resultadoSegundaChance);
                     break;
 
                 case "0":
