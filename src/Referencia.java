@@ -1,12 +1,3 @@
-/**
- * Representa uma única linha do arquivo referencias.txt: o id da página
- * acessada e o tipo de acesso realizado (leitura ou escrita).
- * <p>
- * Classe auxiliar mínima — se já existir algo equivalente no restante do
- * projeto (ex: gerado pelo parser do arquivo de entrada), utilizem essa
- * versão apenas como referência e ajustem os nomes conforme necessário.
- * </p>
- */
 public class Referencia {
 
     private final int idPagina;
