@@ -76,8 +76,7 @@ public class Pagina {
      */
     public void declararAcesso(Acesso modo) {
         this.bitR = modo.getBitR();
-        this.bitM = modo.getBitM();
-
+        this.bitM = this.bitM | modo.getBitM();   // M é sticky: só liga, nunca desliga sozinho
         idade = idade | (1 << (QTD_BITS_IDADE - 1));
     }
 

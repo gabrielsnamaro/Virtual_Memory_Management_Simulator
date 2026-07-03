@@ -50,29 +50,32 @@ public class Main {
 
             switch (opcao) {
                 case "1":
-                    rodarEExibir("NRU", NRU.simular(referencias, quadrosDisponiveis, tempoClock));
+                    rodarEExibir("NRU", NRU.simular(referencias, quadrosDisponiveis, tempoClock), scanner);
                     break;
 
                 case "2":
-                    rodarEExibir("DCO", DCO.simular(referencias, quadrosDisponiveis));
+                    rodarEExibir("DCO", DCO.simular(referencias, quadrosDisponiveis), scanner);
                     break;
 
                 case "3":
-                    rodarEExibir("SegundaChance", DCO.simular(referencias, quadrosDisponiveis));
+                    rodarEExibir("SegundaChance", SegundaChance.simular(referencias, quadrosDisponiveis), scanner);
                     break;
 
                 case "4":
-                    EstatisticasSimulacao resultadoNru = NRU.simular(referencias, quadrosDisponiveis, tempoClock);
-                    EstatisticasSimulacao resultadoDco = DCO.simular(referencias, quadrosDisponiveis);
-                    EstatisticasSimulacao resultadoSegundaChance = SegundaChance.simular(referencias, quadrosDisponiveis);
-                    rodarEExibir("NRU", resultadoNru);
-                    rodarEExibir("DCO", resultadoDco);
-                    rodarEExibir("SegundaChance", resultadoSegundaChance);
+                    EstatisticasSimulacao nru = NRU.simular(referencias, quadrosDisponiveis, tempoClock);
+
+                    EstatisticasSimulacao dco = DCO.simular(referencias, quadrosDisponiveis);
+
+                    EstatisticasSimulacao segunda = SegundaChance.simular(referencias, quadrosDisponiveis);
+
+                    compararResultados(nru, dco, segunda);
+
                     break;
 
                 case "0":
+                    
                     continuar = false;
-                    System.out.println("Ate mais!");
+                    System.out.println("Ate mais, Jpob!");
                     break;
 
                 default:
@@ -80,7 +83,74 @@ public class Main {
             }
         }
 
-        scanner.close();
+
+    }
+
+
+    private static void imprimirCabecalho(String titulo) {
+
+        System.out.println();
+        System.out.println("==============================================================");
+        System.out.printf("%34s%n", titulo);
+        System.out.println("==============================================================");
+    }
+
+    private static void imprimirResumo(EstatisticasSimulacao resultado) {
+
+        int hits = resultado.getTotalAcessos() - resultado.getTotalFaltas();
+
+        System.out.println();
+
+        System.out.println("+------------------------------------------------------+");
+        System.out.printf("| %-28s %17s |%n", "Algoritmo", resultado.getAlgoritmo());
+        System.out.printf("| %-28s %17d |%n", "Total de acessos", resultado.getTotalAcessos());
+        System.out.printf("| %-28s %17d |%n", "Hits", hits);
+        System.out.printf("| %-28s %17d |%n", "Page Faults", resultado.getTotalFaltas());
+        System.out.printf("| %-28s %16.2f%% |%n", "Taxa de faltas", resultado.getTaxaFaltas() * 100);
+
+        System.out.println("+------------------------------------------------------+");
+    }
+
+    private static void compararResultados(EstatisticasSimulacao nru, EstatisticasSimulacao dco, EstatisticasSimulacao segundaChance) {
+
+        imprimirCabecalho("COMPARAÇÃO DOS ALGORITMOS");
+
+        System.out.printf("%-20s %-10s %-10s %-12s%n",
+                "Algoritmo",
+                "Faults",
+                "Hits",
+                "Taxa");
+
+        System.out.println("----------------------------------------------------------");
+
+        imprimirLinhaComparacao(nru);
+        imprimirLinhaComparacao(dco);
+        imprimirLinhaComparacao(segundaChance);
+
+        System.out.println("----------------------------------------------------------");
+
+        EstatisticasSimulacao melhor = nru;
+
+        if (dco.getTotalFaltas() < melhor.getTotalFaltas())
+            melhor = dco;
+
+        if (segundaChance.getTotalFaltas() < melhor.getTotalFaltas())
+            melhor = segundaChance;
+
+        System.out.println();
+        System.out.println("Melhor algoritmo para esta carga:");
+        System.out.println(">> " + melhor.getAlgoritmo());
+    }
+
+    private static void imprimirLinhaComparacao(EstatisticasSimulacao e) {
+
+        int hits = e.getTotalAcessos() - e.getTotalFaltas();
+
+        System.out.printf("%-20s %-10d %-10d %9.2f%%%n",
+                e.getAlgoritmo(),
+                e.getTotalFaltas(),
+                hits,
+                e.getTaxaFaltas() * 100);
     }
 
     /**
@@ -90,20 +160,35 @@ public class Main {
      * @param nome       nome do algoritmo, só para identificar na saída
      * @param resultado  resultado retornado pelo método simular(...)
      */
-    private static void rodarEExibir(String nome, EstatisticasSimulacao resultado) {
+    private static void rodarEExibir(String nome, EstatisticasSimulacao resultado, Scanner scanner) {
+
+        imprimirCabecalho("RESULTADO - " + nome);
+
+        imprimirResumo(resultado);
+
         System.out.println();
-        System.out.println("--- Resultado " + nome + " ---");
-        System.out.println(resultado);
 
-        System.out.print("Ver o log detalhado? (s/n): ");
-        Scanner scanner = new Scanner(System.in);
-        String resposta = scanner.nextLine().trim().toLowerCase();
+        System.out.print("Deseja visualizar o log detalhado? (S/N): ");
 
-        if (resposta.equals("s")) {
+        String resposta = scanner.nextLine().trim();
+
+        if (resposta.equalsIgnoreCase("S")) {
+
+            System.out.println();
+
+            System.out.println("============== LOG DA EXECUÇÃO ==============");
+
+            int contador = 1;
+
             for (String linha : resultado.getLog()) {
-                System.out.println(linha);
+
+                System.out.printf("[%03d] %s%n", contador++, linha);
+
             }
+
+            System.out.println("=============================================");
         }
+
     }
 
     /**
